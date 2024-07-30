@@ -8,13 +8,14 @@ const apiClient = axios.create({
   },
 });
 
-export const useCharacters = () =>
+export const useCharacters = (searchtext: string) =>
   useQuery({
     queryKey: ["characters"],
     queryFn: async () =>
       await apiClient.get(
-        `/v1/public/characters?limit=10&apikey=${
+        `/v1/public/characters?nameStartsWith=${searchtext}&apikey=${
           import.meta.env["VITE_PUBLIC_KEY"]
         }`
       ),
+    enabled: !!searchtext && searchtext?.length > 1,
   });
