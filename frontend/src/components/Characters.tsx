@@ -52,7 +52,6 @@ export const Characters: FunctionComponent = () => {
           cursor: "pointer",
           backgroundColor: isHovered ? "#484848" : "#242424",
         }}
-        key={name}
         onClick={() => handleCharacterSelect(name)}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -88,7 +87,7 @@ export const Characters: FunctionComponent = () => {
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (
-                  <CharacterSelect name={character.name} />
+                  <CharacterSelect name={character.name} key={character.name} />
                 ))}
               </ul>
             )}
