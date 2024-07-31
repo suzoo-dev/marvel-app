@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import { Pagination } from "../components/Characters";
+import { Pagination } from "../types/types";
 
 const apiClient = axios.create({
   baseURL: import.meta.env["VITE_BASE_URL"],

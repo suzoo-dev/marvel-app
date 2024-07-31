@@ -1,30 +1,11 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useCharacters } from "../api/useCharacters";
-
-type Character = {
-  comics: object;
-  description: string;
-  events: object;
-  id: number;
-  name: string;
-  resourceURI: string;
-  series: object;
-  stories: object;
-  thumbnail: object;
-  urls: object[];
-};
-
-export type Pagination = {
-  offset: number;
-  limit: number;
-  total: number;
-  count: number;
-};
+import { Pagination, Character } from "../types/types";
 
 export const Characters: FunctionComponent = () => {
-  const [searchtext, setSearchtext] = useState("");
-  const [characterList, setCharacterList] = useState([]);
-  const [pagination, setPagination] = useState({
+  const [searchtext, setSearchtext] = useState<string>("");
+  const [characterList, setCharacterList] = useState<Character[]>([]);
+  const [pagination, setPagination] = useState<Pagination>({
     limit: 10,
     offset: 0,
     total: 0,
@@ -54,6 +35,33 @@ export const Characters: FunctionComponent = () => {
     setSearchtext("");
   };
 
+  const CharacterSelect = ({ name }: { name: string }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+    };
+
+    return (
+      <li
+        style={{
+          cursor: "pointer",
+          backgroundColor: isHovered ? "#484848" : "#242424",
+        }}
+        key={name}
+        onClick={() => handleCharacterSelect(name)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {name}
+      </li>
+    );
+  };
+
   return (
     <>
       <h3>Search:</h3>
@@ -80,12 +88,7 @@ export const Characters: FunctionComponent = () => {
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (
-                  <li
-                    key={character.name}
-                    onClick={() => handleCharacterSelect(character.name)}
-                  >
-                    {character.name}
-                  </li>
+                  <CharacterSelect name={character.name} />
                 ))}
               </ul>
             )}
