@@ -33,7 +33,6 @@ export const Characters: FunctionComponent = () => {
   const { data, isSuccess, isLoading } = useCharacters(searchtext, pagination);
 
   useEffect(() => {
-    console.log(data?.data.data);
     if (data) {
       const res = data?.data.data;
       setCharacterList(res?.results);
@@ -48,6 +47,11 @@ export const Characters: FunctionComponent = () => {
 
   const handleOnSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchtext(event.target.value);
+  };
+
+  const handleCharacterSelect = (characterName: string) => {
+    alert(characterName);
+    setSearchtext("");
   };
 
   return (
@@ -76,7 +80,12 @@ export const Characters: FunctionComponent = () => {
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (
-                  <li>{character.name}</li>
+                  <li
+                    key={character.name}
+                    onClick={() => handleCharacterSelect(character.name)}
+                  >
+                    {character.name}
+                  </li>
                 ))}
               </ul>
             )}
