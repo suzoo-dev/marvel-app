@@ -7,7 +7,7 @@ To run application please install [Bun](https://bun.sh/docs/installation) first 
 Then run the next few lines in your terminal...
 
 ```
-cd Frontend
+cd frontend
 bun install
 bun run dev
 ```
