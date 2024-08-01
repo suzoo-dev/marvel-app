@@ -1,0 +1,4 @@
+I would add a create method to the controller using the Post decorator.
+Within the create method argument I would add the Body decorator and expect a variable called createAccomplicesDto of type CreateAccomplicesDto.
+This method would then call the create method on the service class.
+The service class create method would be injected with the database client and update the accomplices table with the values on createAccomplicesDto.
