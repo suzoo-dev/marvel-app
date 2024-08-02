@@ -18,6 +18,7 @@ To use the app then just simply start typing in the search bar and the call will
 
 - Decision to use Tanstack Query for handling the state of async calls to the Marvel API.
 - One challenge was certainly the speed of the API.
+- One gotcha I imposed on myself, after creating an auto-suggest feature but then moving the search call to a button action which then didn't meet the requirement of auto-suggest.
 
 ## Remaining Tasks
 
