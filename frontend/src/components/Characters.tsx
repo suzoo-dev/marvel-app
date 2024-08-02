@@ -37,6 +37,7 @@ export const Characters: FunctionComponent = () => {
   };
 
   const handleOnSearch = () => {
+    // Cancel pending queries if new search is requested
     queryClient.cancelQueries({ queryKey: ["characters"] });
     setCharacterList([]);
     refetch();
@@ -91,7 +92,7 @@ export const Characters: FunctionComponent = () => {
             type="text"
             onChange={handleOnChange}
             value={searchtext}
-            style={{ width: "200px", height: "40px" }}
+            style={{ width: "18em", height: "3em" }}
           />
           <div
             style={{
@@ -102,12 +103,14 @@ export const Characters: FunctionComponent = () => {
                   ? "1px solid white"
                   : "none"
               }`,
-              width: "200px",
-              height: `${isFetching ? "30px" : isSuccess ? "280px" : "0px"}`,
+              width: "calc(15em - 2px)",
+              maxHeight: `${
+                isFetching ? "2em" : isSuccess && !!searchtext ? "20em" : "0em"
+              }`,
               overflowY: "auto",
               textAlign: "left",
               paddingLeft: "8px",
-              transition: "height ease 200ms",
+              transition: "max-height ease 200ms",
             }}
           >
             {isPending && isFetching && <p>Loading...</p>}
