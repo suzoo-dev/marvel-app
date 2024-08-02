@@ -5,23 +5,19 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const Characters: FunctionComponent = () => {
   const [searchtext, setSearchtext] = useState<string>("");
-  const [characterList, setCharacterList] = useState<Character[]>([]);
-  const { data, isSuccess, isPending, isFetching, refetch } =
-    useCharacters(searchtext);
+  const {
+    data: characterList,
+    isSuccess,
+    isPending,
+    isFetching,
+    refetch,
+  } = useCharacters(searchtext);
 
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (data) {
-      const res = data?.data.data;
-      setCharacterList(res?.results);
-    }
-  }, [data]);
 
   const handleOnSearch = useCallback(() => {
     // Cancel pending queries if new search is requested
     queryClient.cancelQueries({ queryKey: ["characters"] });
-    setCharacterList([]);
     refetch();
   }, [refetch, queryClient]);
 
@@ -38,7 +34,6 @@ export const Characters: FunctionComponent = () => {
 
   const handleCharacterSelect = (characterName: string) => {
     alert(characterName);
-    setCharacterList([]);
     setSearchtext("");
   };
 
@@ -106,7 +101,7 @@ export const Characters: FunctionComponent = () => {
               transition: "max-height ease 200ms",
             }}
           >
-            {isFetching && characterList.length === 0 && <p>Loading...</p>}
+            {isFetching && characterList?.length === 0 && <p>Loading...</p>}
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (
