@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useCharacters } from "../api/useCharacters";
 import { Pagination, Character } from "../types/types";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,15 +32,22 @@ export const Characters: FunctionComponent = () => {
     }
   }, [data]);
 
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchtext(event.target.value);
-  };
-
-  const handleOnSearch = () => {
+  const handleOnSearch = useCallback(() => {
     // Cancel pending queries if new search is requested
     queryClient.cancelQueries({ queryKey: ["characters"] });
     setCharacterList([]);
     refetch();
+  }, [refetch, queryClient]);
+
+  useEffect(() => {
+    // Check searchtext length is greater than 1, if so perform search to populate auto-suggest dropdown
+    if (searchtext.length > 1) {
+      handleOnSearch();
+    }
+  }, [searchtext, handleOnSearch]);
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchtext(event.target.value);
   };
 
   const handleCharacterSelect = (characterName: string) => {
