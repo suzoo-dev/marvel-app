@@ -25,4 +25,4 @@ To use the app then just simply start typing in the search bar and the call will
   - Add a loading spinner to give more interactive feedback to the user.
 - Reduce API Calls
   - Refactor to stop making API calls after the first search if the first two characters are the same.
-  - The local state could be filtered to further shorten the list.
+  - Data could be stored into local state and filtered based on the search text.
