@@ -7,7 +7,7 @@ export const Characters: FunctionComponent = () => {
   const [searchtext, setSearchtext] = useState<string>("");
   const [characterList, setCharacterList] = useState<Character[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
-    limit: 30,
+    limit: 100,
     offset: 0,
     total: 0,
     count: 0,
@@ -120,7 +120,11 @@ export const Characters: FunctionComponent = () => {
             )}
           </div>
         </div>
-        <button style={{ height: "3em" }} onClick={handleOnSearch}>
+        <button
+          style={{ height: "3em" }}
+          onClick={handleOnSearch}
+          disabled={searchtext.length < 2}
+        >
           Search
         </button>
       </div>
