@@ -18,5 +18,6 @@ export const useCharacters = (searchtext: string, pagination: Pagination) =>
       await apiClient.get(
         `/v1/public/characters?nameStartsWith=${searchtext}&limit=${pagination.limit}&offset=${pagination.offset}&apikey=${apiKey}`
       ),
-    enabled: !!searchtext && searchtext?.length > 1,
+    refetchOnMount: false,
+    enabled: false,
   });

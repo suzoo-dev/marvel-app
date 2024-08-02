@@ -1,17 +1,23 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import { useCharacters } from "../api/useCharacters";
 import { Pagination, Character } from "../types/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Characters: FunctionComponent = () => {
   const [searchtext, setSearchtext] = useState<string>("");
   const [characterList, setCharacterList] = useState<Character[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
-    limit: 10,
+    limit: 30,
     offset: 0,
     total: 0,
     count: 0,
   });
-  const { data, isSuccess, isLoading } = useCharacters(searchtext, pagination);
+  const { data, isSuccess, isPending, isFetching, refetch } = useCharacters(
+    searchtext,
+    pagination
+  );
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (data) {
@@ -26,12 +32,19 @@ export const Characters: FunctionComponent = () => {
     }
   }, [data]);
 
-  const handleOnSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchtext(event.target.value);
+  };
+
+  const handleOnSearch = () => {
+    queryClient.cancelQueries({ queryKey: ["characters"] });
+    setCharacterList([]);
+    refetch();
   };
 
   const handleCharacterSelect = (characterName: string) => {
     alert(characterName);
+    setCharacterList([]);
     setSearchtext("");
   };
 
@@ -63,27 +76,41 @@ export const Characters: FunctionComponent = () => {
 
   return (
     <>
-      <h3>Search:</h3>
-      <div style={{ width: "300px" }}>
-        <input
-          name="search"
-          type="text"
-          onChange={handleOnSearch}
-          value={searchtext}
-          style={{ width: "100%", height: "30px" }}
-        />
-        {searchtext.length > 1 && (
+      <h3>Find a Marvel character:</h3>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "350px",
+        }}
+      >
+        <div>
+          <input
+            name="search"
+            type="text"
+            onChange={handleOnChange}
+            value={searchtext}
+            style={{ width: "200px", height: "40px" }}
+          />
           <div
             style={{
-              border: "1px solid white",
-              width: "100%",
-              maxHeight: "280px",
+              display: "flex",
+              position: "fixed",
+              border: `${
+                (isPending && isFetching) || (isSuccess && !!searchtext)
+                  ? "1px solid white"
+                  : "none"
+              }`,
+              width: "200px",
+              height: `${isFetching ? "30px" : isSuccess ? "280px" : "0px"}`,
               overflowY: "auto",
               textAlign: "left",
               paddingLeft: "8px",
+              transition: "height ease 200ms",
             }}
           >
-            {isLoading && <p>Loading...</p>}
+            {isPending && isFetching && <p>Loading...</p>}
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (
@@ -92,7 +119,10 @@ export const Characters: FunctionComponent = () => {
               </ul>
             )}
           </div>
-        )}
+        </div>
+        <button style={{ height: "3em" }} onClick={handleOnSearch}>
+          Search
+        </button>
       </div>
     </>
   );
