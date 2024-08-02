@@ -1,21 +1,13 @@
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useCharacters } from "../api/useCharacters";
-import { Pagination, Character } from "../types/types";
+import { Character } from "../types/types";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Characters: FunctionComponent = () => {
   const [searchtext, setSearchtext] = useState<string>("");
   const [characterList, setCharacterList] = useState<Character[]>([]);
-  const [pagination, setPagination] = useState<Pagination>({
-    limit: 100,
-    offset: 0,
-    total: 0,
-    count: 0,
-  });
-  const { data, isSuccess, isPending, isFetching, refetch } = useCharacters(
-    searchtext,
-    pagination
-  );
+  const { data, isSuccess, isPending, isFetching, refetch } =
+    useCharacters(searchtext);
 
   const queryClient = useQueryClient();
 
@@ -23,12 +15,6 @@ export const Characters: FunctionComponent = () => {
     if (data) {
       const res = data?.data.data;
       setCharacterList(res?.results);
-      setPagination({
-        offset: res?.offset,
-        limit: res?.limit,
-        total: res?.total,
-        count: res?.count,
-      });
     }
   }, [data]);
 
@@ -120,7 +106,7 @@ export const Characters: FunctionComponent = () => {
               transition: "max-height ease 200ms",
             }}
           >
-            {isPending && isFetching && <p>Loading...</p>}
+            {isFetching && characterList.length === 0 && <p>Loading...</p>}
             {isSuccess && (
               <ul>
                 {characterList?.map((character: Character) => (

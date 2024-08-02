@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { apiKey, baseURL } from "./constants";
 
-import { Pagination } from "../types/types";
-
 const apiClient = axios.create({
   baseURL: baseURL,
   headers: {
@@ -11,12 +9,12 @@ const apiClient = axios.create({
   },
 });
 
-export const useCharacters = (searchtext: string, pagination: Pagination) =>
+export const useCharacters = (searchtext: string) =>
   useQuery({
     queryKey: ["characters"],
     queryFn: async () =>
       await apiClient.get(
-        `/v1/public/characters?nameStartsWith=${searchtext}&limit=${pagination.limit}&offset=${pagination.offset}&apikey=${apiKey}`
+        `/v1/public/characters?nameStartsWith=${searchtext}&limit=100&offset=0&apikey=${apiKey}`
       ),
     refetchOnMount: false,
     enabled: false,
